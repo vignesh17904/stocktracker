@@ -1,13 +1,7 @@
 CREATE DATABASE InventoryManagement4;
 USE InventoryManagement4;
 
--- Create the Categories table
-CREATE TABLE Categories (
-    CategoryID INT AUTO_INCREMENT PRIMARY KEY,
-    CategoryName VARCHAR(255) NOT NULL
-);
 
--- Create the Suppliers table
 CREATE TABLE Suppliers (
     SupplierID INT PRIMARY KEY,
     SupplierName VARCHAR(255) NOT NULL,
@@ -18,7 +12,11 @@ CREATE TABLE Suppliers (
     Email VARCHAR(255)
 );
 
--- Create the Products table
+CREATE TABLE Categories (
+    CategoryID INT AUTO_INCREMENT PRIMARY KEY,
+    CategoryName VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE Products (
     ProductID INT PRIMARY KEY,
     ProductName VARCHAR(255) NOT NULL,
@@ -28,7 +26,7 @@ CREATE TABLE Products (
     QuantityInStock INT
 );
 
--- Create the Transactions table
+
 CREATE TABLE Transactions (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     ProductID INT,
@@ -38,7 +36,7 @@ CREATE TABLE Transactions (
     Notes TEXT
 );
 
--- Insert data into Categories
+
 INSERT INTO Categories (CategoryID, CategoryName) VALUES
 (1, 'Electronics'),
 (2, 'Clothing'),
@@ -48,7 +46,7 @@ INSERT INTO Categories (CategoryID, CategoryName) VALUES
 (6, 'Furniture'),
 (7, 'Sports');
 
--- Insert sample data into Suppliers
+-- 
 INSERT INTO Suppliers (SupplierID, SupplierName, Address, City, Country, Phone, Email) VALUES
 (1, 'Sonny Electronics', '123 Main Street', 'Mumbai', 'India', '123-456-7890', 'info@electronicsupplier.com'),
 (2, 'Zaraa fashions', '456 Broadway', 'Delhi', 'India', '987-654-3210', 'info@fashionhouse.com'),
@@ -60,7 +58,7 @@ INSERT INTO Suppliers (SupplierID, SupplierName, Address, City, Country, Phone, 
 (8, 'Gadget World', '234 Tech Lane', 'Mumbai', 'India', '333-444-5555', 'info@gadgetworld.com'),
 (9, 'Fashion Hub', '789 Chic Avenue', 'Delhi', 'India', '666-777-8888', 'info@fashionhub.com');
 
--- Insert sample data into Products
+
 INSERT INTO Products (ProductID, ProductName, CategoryID, SupplierID, UnitPrice, QuantityInStock) VALUES
 (1, 'Smartphone', 1, 1, 599.99, 50),
 (2, 'Laptop', 1, 1, 999.99, 30),
@@ -71,7 +69,7 @@ INSERT INTO Products (ProductID, ProductName, CategoryID, SupplierID, UnitPrice,
 (7, 'LEGO Set', 5, 5, 59.99, 40),
 (8, 'Dining Table', 6, 6, 299.99, 10);
 
--- Insert sample data into Transactions
+
 INSERT INTO Transactions (TransactionID, ProductID, TransactionType, Quantity, TransactionDate, Notes) VALUES
 (1, 1, 'Purchase', 10, '2024-05-01', 'Bulk order for smartphones'),
 (2, 2, 'Purchase', 5, '2024-05-02', 'Order for laptops'),
@@ -94,7 +92,7 @@ INSERT INTO Transactions (TransactionID, ProductID, TransactionType, Quantity, T
 (19, 3, 'Sale', 20, '2024-06-11', 'Sale of T-shirts'),
 (20, 4, 'Sale', 15, '2024-06-12', 'Sale of Jeans');
 
--- Add foreign key constraints
+
 ALTER TABLE Products
 ADD CONSTRAINT FK_CategoryID
 FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID);
@@ -107,20 +105,19 @@ ALTER TABLE Transactions
 ADD CONSTRAINT FK_ProductID
 FOREIGN KEY (ProductID) REFERENCES Products(ProductID);
 
--- Queries
--- 1. Products with Categories and Suppliers
+
 SELECT p.ProductName, c.CategoryName, s.SupplierName
 FROM Products p
 INNER JOIN Categories c ON p.CategoryID = c.CategoryID
 INNER JOIN Suppliers s ON p.SupplierID = s.SupplierID;
 
--- 2. Total Quantity by Category
+
 SELECT c.CategoryName, SUM(p.QuantityInStock) AS TotalQuantity
 FROM Products p
 INNER JOIN Categories c ON p.CategoryID = c.CategoryID
 GROUP BY c.CategoryName;
 
--- 3. Total Sales Amount by Transaction Type
+
 SELECT TransactionType, SUM(Quantity * UnitPrice) AS TotalSalesAmount
 FROM Transactions t
 JOIN Products p ON t.ProductID = p.ProductID
